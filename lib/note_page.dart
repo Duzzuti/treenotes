@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:treenotes/create_dialog.dart';
+import 'package:treenotes/info_dialog.dart';
 import 'package:treenotes/node.dart';
 
 class NotePage extends StatelessWidget {
@@ -22,7 +23,7 @@ class NotePage extends StatelessWidget {
                 size: 48,
               ),
               onPressed: () {
-                showDialog(context: context, builder: (context) => CreateDialog(parent: node));
+                showDialog(context: context, builder: (context) => CreateDialog(parent: node), barrierDismissible: false);
               },
             ),
             IconButton(
@@ -41,7 +42,43 @@ class NotePage extends StatelessWidget {
           ],
         ),
         body: Column(
-          children:[ 
+          children:[
+            Row(children: [
+              const SizedBox(width: 12),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.12,
+                child: Text('Note',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.65,
+                child: Center(
+                  child: Text('direct/indirect children',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.08,
+                child: Center(
+                  child: Text('Go',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ),
+            ]),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.7,
               child: ListView.builder(
@@ -63,10 +100,15 @@ class NotePage extends StatelessWidget {
                       children: [
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.55,
-                          child: Text(node.children[index].subject,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: 20,
+                          child: TextButton(
+                            onPressed: () {
+                              showDialog(context: context, builder: (context) => InfoDialog(node: node.children[index]));
+                            },
+                            child: Text(node.children[index].subject,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 20,
+                              ),
                             ),
                           ),
                         ),

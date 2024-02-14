@@ -79,7 +79,6 @@ class _CreateDialogState extends State<CreateDialog> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    widget.parent.add(title: titleController.text, body: contentController.text);
                     Navigator.pop(context);
                   },
                   style: ButtonStyle(
@@ -95,6 +94,7 @@ class _CreateDialogState extends State<CreateDialog> {
                 ),
                 ElevatedButton(
                   onPressed: !submitActivated ? null : () {
+                    widget.parent.add(title: titleController.text, body: contentController.text);
                     Navigator.pop(context);
                   },
                   style: ButtonStyle(
