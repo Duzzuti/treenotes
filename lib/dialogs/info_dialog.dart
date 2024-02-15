@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:treenotes/node.dart';
 
 class InfoDialog extends StatefulWidget {
-  final Node node;
+  final Map<String, dynamic> node;
   const InfoDialog({super.key, required this.node});
 
   @override
@@ -20,9 +19,9 @@ class _InfoDialogState extends State<InfoDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(widget.node.subject, style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 24)),
+            Text(widget.node["title"], style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 24)),
             const SizedBox(height: 16),
-            Text(widget.node.body, style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 20)),
+            Text(widget.node["content"], style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 20)),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

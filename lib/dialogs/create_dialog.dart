@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:treenotes/node.dart';
+import 'package:treenotes/database/helper.dart';
 
 class CreateDialog extends StatefulWidget {
-  final Node parent;
-  const CreateDialog({super.key, required this.parent});
+  final int parentId;
+  const CreateDialog({super.key, required this.parentId});
 
   @override
   State<CreateDialog> createState() => _CreateDialogState();
@@ -94,8 +94,8 @@ class _CreateDialogState extends State<CreateDialog> {
                 ),
                 ElevatedButton(
                   onPressed: !submitActivated ? null : () {
-                    widget.parent.add(title: titleController.text, body: contentController.text);
-                    Navigator.pop(context);
+                    final dbHelper = DatabaseHelper();
+                    dbHelper.addNode(parentId: widget.parentId, title: titleController.text, content: contentController.text).then((value) => Navigator.pop(context));
                   },
                   style: ButtonStyle(
                     backgroundColor: submitActivated 
