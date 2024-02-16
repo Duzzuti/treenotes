@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/database/helper.dart';
 
 class InfoDialog extends StatefulWidget {
   final Map<String, dynamic> node;
@@ -58,7 +59,8 @@ class _InfoDialogState extends State<InfoDialog> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    final dbHelper = DatabaseHelper();
+                    dbHelper.deleteNode(widget.node['node_id']).then((value) => Navigator.pop(context));
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),

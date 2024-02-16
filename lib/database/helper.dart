@@ -108,6 +108,69 @@ class DatabaseHelper {
     await batch.commit();
   }
 
+  Future<void> deleteNode(int nodeId) async {
+    final db = await database;
+    final batch = db!.batch();
+
+    // Decrement num_descendants values of all parent nodes
+    final node = await getNodeById(nodeId);
+    if (node != null) {
+      final parentId = node['parent_id'] as int?;
+      if (parentId != null) {
+        await _subDescendants(batch, parentId, node['num_descendants'] + 1);
+        await _decrementChildren(batch, parentId);
+      } else {
+        throw Exception('Parent node with ID $parentId not found. Cannot delete node $nodeId. Please note that the root node cannot be deleted.');
+      }
+    } else {
+      throw Exception('Node with ID $nodeId not found');
+    }
+    await _deleteRecursively(batch, nodeId);
+    // Execute the batch operations
+    await batch.commit();
+  }
+
+  Future<void> _deleteRecursively(Batch batch, int nodeId) async {
+    // Delete the node and its relationships recursively
+    final children = await getChildren(parentId: nodeId);
+    for (final child in children) {
+      final childId = child['node_id'] as int;
+      await _deleteRecursively(batch, childId);
+    }
+    batch.delete('Nodes', where: 'node_id = ?', whereArgs: [nodeId]);
+    batch.delete('NodeRelationships', where: 'child_id = ?', whereArgs: [nodeId]);
+  }
+
+  Future<void> _subDescendants(Batch batch, int? parentId, int numDescendants) async {
+    // Decrease num_descendants values of all parent nodes recursively
+    if(parentId == null) return;
+    final parent = await getNodeById(parentId);
+    if (parent != null) {
+      final int newNumDescendants = parent['num_descendants'] - numDescendants;
+      if (newNumDescendants < 0) {
+        throw Exception('Negative num_descendants value for node with ID $parentId');
+      }
+      batch.update('Nodes', {'num_descendants': newNumDescendants}, where: 'node_id = ?', whereArgs: [parentId]);
+      await _subDescendants(batch, parent['parent_id'], numDescendants);
+    } else {
+      throw Exception('Parent node with ID $parentId not found');
+    }
+  }
+
+  Future<void> _decrementChildren(Batch batch, int parentId) async {
+    // Decrement num_children value of the direct parent node
+    final parent = await getNodeById(parentId);
+    if (parent != null) {
+      final int numChildren = parent['num_children'] - 1;
+      if (numChildren < 0) {
+        throw Exception('Negative num_children value for node with ID $parentId');
+      }
+      batch.update('Nodes', {'num_children': numChildren}, where: 'node_id = ?', whereArgs: [parentId]);
+    } else {
+      throw Exception('Parent node with ID $parentId not found');
+    }
+  }
+
   Future<void> _incrementDescendants(Batch batch, int? parentId) async {
     // Increment num_descendants values of all parent nodes recursively
     if(parentId == null) return;
@@ -116,6 +179,8 @@ class DatabaseHelper {
       final int numDescendants = parent['num_descendants'] + 1;
       batch.update('Nodes', {'num_descendants': numDescendants}, where: 'node_id = ?', whereArgs: [parentId]);
       await _incrementDescendants(batch, parent['parent_id']);
+    } else {
+      throw Exception('Parent node with ID $parentId not found');
     }
   }
 
@@ -125,6 +190,8 @@ class DatabaseHelper {
     if (parent != null) {
       final int numChildren = parent['num_children'] + 1;
       batch.update('Nodes', {'num_children': numChildren}, where: 'node_id = ?', whereArgs: [parentId]);
+    } else {
+      throw Exception('Parent node with ID $parentId not found');
     }
   }
 

@@ -26,10 +26,6 @@ void main() async {
     debugPrint('Root node added');
   }
 
-  // Retrieve the children of the root node
-  final rootChildren = await dbHelper.getChildren(parentId: 0);
-  debugPrint('Root children: $rootChildren');
-
   runApp(const MyApp());
 }
 
