@@ -60,11 +60,11 @@ class _EditDialogState extends State<EditDialog> {
             ),
             const SizedBox(height: 16),
             SizedBox(
-              height: 200,
+              height: 320,
               child: TextField(
                 controller: contentController,
                 maxLines: null,
-                minLines: 7,
+                minLines: 12,
                 scrollPhysics: const AlwaysScrollableScrollPhysics(),
                 decoration: InputDecoration(
                   hintText: 'Content',
