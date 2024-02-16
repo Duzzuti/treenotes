@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:treenotes/database/helper.dart';
+import 'package:treenotes/dialogs/confirmation_dialog.dart';
 import 'package:treenotes/dialogs/edit_dialog.dart';
 
 class InfoDialog extends StatefulWidget {
@@ -60,8 +61,15 @@ class _InfoDialogState extends State<InfoDialog> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    final dbHelper = DatabaseHelper();
-                    dbHelper.deleteNode(widget.node['node_id']).then((value) => Navigator.pop(context));
+                    showDialog(context: context, builder: (context) => ConfirmationDialog(
+                      title: 'Delete Node',
+                      content: 'Are you sure you want to delete this node AND ALL ${widget.node["num_descendants"]} DESCENDANTS?',
+                      requiredDelay: 3000,
+                      onConfirm: () {
+                        final dbHelper = DatabaseHelper();
+                        dbHelper.deleteNode(widget.node['node_id']).then((value) => Navigator.pop(context));
+                      },
+                    ));
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),

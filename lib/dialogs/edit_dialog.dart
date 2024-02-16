@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:treenotes/database/helper.dart';
+import 'package:treenotes/dialogs/confirmation_dialog.dart';
 
 class EditDialog extends StatefulWidget {
   final Map<String, dynamic> node;
@@ -95,9 +96,18 @@ class _EditDialogState extends State<EditDialog> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: !submitActivated ? null : () async {
-                    final dbHelper = DatabaseHelper();
-                    await dbHelper.updateNode(widget.node["node_id"], titleController.text, contentController.text).then((value) => Navigator.pop(context));
+                  onPressed: !submitActivated ? null : () {
+                    showDialog(context: context, builder: (context) => ConfirmationDialog(
+                      title: 'Edit Node',
+                      content: 'Are you sure you want to save the changes?',
+                      requiredDelay: 1000,
+                      onConfirm: () async {
+                        // Update the node in the database
+                        // (see the next snippet for the implementation of the DatabaseHelper class)
+                        final dbHelper = DatabaseHelper();
+                        await dbHelper.updateNode(widget.node["node_id"], titleController.text, contentController.text).then((value) => Navigator.pop(context));
+                      },
+                    ));
                   },
                   style: ButtonStyle(
                     backgroundColor: submitActivated 
