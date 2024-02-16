@@ -141,6 +141,11 @@ class DatabaseHelper {
     batch.delete('NodeRelationships', where: 'child_id = ?', whereArgs: [nodeId]);
   }
 
+  Future<void> updateNode(int nodeId, String title, String content) async {
+    final db = await database;
+    await db!.update('Nodes', {'title': title, 'content': content}, where: 'node_id = ?', whereArgs: [nodeId]);
+  }
+
   Future<void> _subDescendants(Batch batch, int? parentId, int numDescendants) async {
     // Decrease num_descendants values of all parent nodes recursively
     if(parentId == null) return;

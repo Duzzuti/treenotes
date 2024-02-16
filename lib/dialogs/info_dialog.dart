@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:treenotes/database/helper.dart';
+import 'package:treenotes/dialogs/edit_dialog.dart';
 
 class InfoDialog extends StatefulWidget {
   final Map<String, dynamic> node;
@@ -44,7 +45,7 @@ class _InfoDialogState extends State<InfoDialog> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    showDialog(context: context, builder: (context) => EditDialog(node: widget.node)).then((value) => Navigator.pop(context));
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
