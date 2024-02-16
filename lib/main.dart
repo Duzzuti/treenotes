@@ -1,8 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:treenotes/node.dart';
+import 'package:sqflite/sqflite.dart' as sqflite;
+import 'package:sqflite_common_ffi/sqflite_ffi.dart' as sqflite_ffi;
+import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/note_page.dart';
 
-void main() {
+void main() async {
+  // Initialize sqflite_ffi
+  sqflite_ffi.sqfliteFfiInit();
+
+  // Set the databaseFactory to use sqflite_ffi
+  sqflite.databaseFactory = sqflite_ffi.databaseFactoryFfi;
+
+  // load the root node from the database
+  final dbHelper = DatabaseHelper();
+  // DELETE DATABASE 
+  // (await dbHelper.database)!.delete('Nodes', where: 'node_id >= 0');
+  // (await dbHelper.database)!.delete('NodeRelationships', where: 'parent_id >= 0');
+  // initialize the database
+  await dbHelper.database;
+
+  // Add root node if it does not exist
+  if(await dbHelper.addRoot() == -1) {
+    debugPrint('Root node already exists');
+  } else {
+    debugPrint('Root node added');
+  }
+
+  // Retrieve the children of the root node
+  final rootChildren = await dbHelper.getChildren(parentId: 0);
+  debugPrint('Root children: $rootChildren');
+
   runApp(const MyApp());
 }
 
@@ -11,11 +38,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: load the root node from the database
-    Node root = Node(null, 'Root title', 'Root content', 0, 0, []);
-    root.add(title: 'Child 1 title', body: 'Child 1 content');
-    root.add(title: 'mmmmmmmmmmmmmmmmmmmm', body: 'Child 2 content');
-    root.children.add(Node(root, 'Child 3 title', 'Child 3 content', 9999, 9999, []));
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Tree Notes',
@@ -29,7 +52,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: NotePage(node: root),
+      home: const NotePage(nodeId: 0),  // The root node has an id of 0
     );
   }
 }
