@@ -8,7 +8,7 @@ class ConfirmationDialog extends StatefulWidget{
   final int requiredDelay;
   final Function onConfirm;
 
-  const ConfirmationDialog({Key? key, required this.title, required this.content, required this.requiredDelay, required this.onConfirm}) : super(key: key);
+  const ConfirmationDialog({super.key, required this.title, required this.content, required this.requiredDelay, required this.onConfirm});
 
   @override
   State<ConfirmationDialog> createState() => _ConfirmationDialogState();

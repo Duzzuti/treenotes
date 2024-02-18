@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart' as sqflite_ffi;
@@ -5,11 +7,14 @@ import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/note_page.dart';
 
 void main() async {
-  // Initialize sqflite_ffi
-  sqflite_ffi.sqfliteFfiInit();
+  WidgetsFlutterBinding.ensureInitialized();
+  if(!Platform.isAndroid){
+    // Initialize sqflite_ffi
+    sqflite_ffi.sqfliteFfiInit();
 
-  // Set the databaseFactory to use sqflite_ffi
-  sqflite.databaseFactory = sqflite_ffi.databaseFactoryFfi;
+    // Set the databaseFactory to use sqflite_ffi
+    sqflite.databaseFactory = sqflite_ffi.databaseFactoryFfi;
+  }
 
   // load the root node from the database
   final dbHelper = DatabaseHelper();
