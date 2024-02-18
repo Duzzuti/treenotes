@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:treenotes/dialogs/create_dialog.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/dialogs/info_dialog.dart';
+import 'package:treenotes/widgets/custom_appbar.dart';
 
 class NotePage extends StatefulWidget {
   final int nodeId;
@@ -52,41 +53,27 @@ class _NotePageState extends State<NotePage> {
       return Stack(
         children: [
           Scaffold(
-            appBar: AppBar(
-              iconTheme: IconThemeData(color: Theme.of(context).colorScheme.background),
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              title: Text(isLoading ? "Loading..." : node!["title"], style: TextStyle(color: Theme.of(context).colorScheme.background)),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.add,
-                    color: Theme.of(context).colorScheme.background,
-                    size: 48,
-                  ),
-                  onPressed: () {
-                    showDialog(context: context, builder: (context) => isLoading ? const Dialog() : CreateDialog(parentId: widget.nodeId), barrierDismissible: false).then((value) => loadData());
-                  },
-                ),
-                IconButton(
-                  icon: Icon(Icons.home,
-                    color: Theme.of(context).colorScheme.background,
-                    size: 48,
-                  ),
-                  onPressed: () {
-                    Navigator.popUntil(
-                      context,
-                      ModalRoute.withName('/'),
-                    );
-                  },
-                ),
-          
-              ],
+            appBar: CustomAppBar(
+              context: context,
+              title: isLoading ? "Loading..." : node!["title"],
+              actions: ActionDataList(actions: [
+                ActionData(icon: Icons.add, onPressed: () {
+                  showDialog(context: context, builder: (context) => isLoading ? const Dialog() : CreateDialog(parentId: widget.nodeId), barrierDismissible: false).then((value) => loadData());
+                }),
+                ActionData(icon: Icons.home, onPressed: () {
+                  Navigator.popUntil(
+                    context,
+                    ModalRoute.withName('/'),
+                  );
+                }),
+              ]),
             ),
             body: Column(
               children:[
                 Row(children: [
                   const SizedBox(width: 12),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.12,
+                    width: MediaQuery.of(context).size.width * 0.13,
                     child: Text('Note',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
