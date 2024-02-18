@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/dialogs/confirmation_dialog.dart';
 import 'package:treenotes/dialogs/edit_dialog.dart';
+import 'package:treenotes/widgets/dialog_button.dart';
 
 class InfoDialog extends StatefulWidget {
   final Map<String, dynamic> node;
@@ -29,39 +30,17 @@ class _InfoDialogState extends State<InfoDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-                    padding: MaterialStateProperty.all(const EdgeInsets.only(bottom: 12, left: 12, right: 12)),
-                  ),
-                  child: Text('Cancel', 
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.background,
-                      fontSize: 20,
-                    ),
-                  ),
+                const CancelDialogButton(),
+                DialogButton(
+                  context: context, 
+                  text: "Edit", 
+                  onPressed: () => showDialog(context: context, builder: (context) => EditDialog(node: widget.node)).then((value) => Navigator.pop(context))
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    showDialog(context: context, builder: (context) => EditDialog(node: widget.node)).then((value) => Navigator.pop(context));
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-                    padding: MaterialStateProperty.all(const EdgeInsets.only(bottom: 12, left: 12, right: 12)),
-                  ),
-                  child: Text('Edit', 
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.background,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    showDialog(context: context, builder: (context) => ConfirmationDialog(
+                DialogButton(
+                  context: context, 
+                  text: "Delete", 
+                  onPressed: () => showDialog(context: context, builder: (context) => 
+                    ConfirmationDialog(
                       title: 'Delete Node',
                       content: 'Are you sure you want to delete this node AND ALL ${widget.node["num_descendants"]} DESCENDANTS?',
                       requiredDelay: 3000,
@@ -69,16 +48,6 @@ class _InfoDialogState extends State<InfoDialog> {
                         final dbHelper = DatabaseHelper();
                         dbHelper.deleteNode(widget.node['node_id']).then((value) => Navigator.pop(context));
                       },
-                    ));
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
-                    padding: MaterialStateProperty.all(const EdgeInsets.only(bottom: 12, left: 12, right: 12)),
-                  ),
-                  child: Text('Delete', 
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.background,
-                      fontSize: 20,
                     ),
                   ),
                 ),
