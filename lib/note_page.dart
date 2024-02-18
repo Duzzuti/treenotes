@@ -111,15 +111,14 @@ class _NotePageState extends State<NotePage> {
                               onPressed: () {
                                 showDialog(
                                         context: context,
-                                        builder: (context) => InfoDialog(
-                                            node: children![index]))
+                                        builder: (context) =>
+                                            InfoDialog(node: children![index]))
                                     .then((value) => loadData());
                               },
                               child: Text(
                                 children![index]["title"],
                                 style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context).colorScheme.primary,
                                   fontSize: 20,
                                 ),
                               ),
@@ -137,8 +136,7 @@ class _NotePageState extends State<NotePage> {
                                 maxLines: 1,
                                 softWrap: false,
                                 style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context).colorScheme.primary,
                                   fontSize: 16,
                                 ),
                               ),
@@ -156,8 +154,7 @@ class _NotePageState extends State<NotePage> {
                                 maxLines: 1,
                                 softWrap: false,
                                 style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context).colorScheme.primary,
                                   fontSize: 16,
                                 ),
                               ),
@@ -177,18 +174,15 @@ class _NotePageState extends State<NotePage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => NotePage(
-                                            nodeId: children![index]
-                                                ["node_id"],
+                                            nodeId: children![index]["node_id"],
                                           )),
                                 ).then((value) => loadData());
                               },
                               child: SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.1,
+                                width: MediaQuery.of(context).size.width * 0.1,
                                 child: Icon(
                                   Icons.arrow_forward_ios,
-                                  color:
-                                      Theme.of(context).colorScheme.primary,
+                                  color: Theme.of(context).colorScheme.primary,
                                   size: 24,
                                 ),
                               ),
