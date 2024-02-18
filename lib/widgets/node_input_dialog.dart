@@ -30,11 +30,20 @@ class NodeInputDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(title, style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 24)),
+              Text(
+                title,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontSize: 24,
+                ),
+              ),
               const SizedBox(height: 16),
               TitleInputField(titleController: titleController),
               const SizedBox(height: 16),
-              ContentInputField(contentScrollController: contentScrollController, contentController: contentController),
+              ContentInputField(
+                contentScrollController: contentScrollController,
+                contentController: contentController,
+              ),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -23,30 +23,49 @@ class _InfoDialogState extends State<InfoDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(widget.node["title"], style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 24)),
+            Text(
+              widget.node["title"],
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: 24,
+              ),
+            ),
             const SizedBox(height: 16),
-            Text(widget.node["content"], style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 20)),
+            Text(
+              widget.node["content"],
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
+                fontSize: 20,
+              ),
+            ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const CancelDialogButton(),
                 DialogButton(
-                  context: context, 
-                  text: "Edit", 
-                  onPressed: () => showDialog(context: context, builder: (context) => EditDialog(node: widget.node)).then((value) => Navigator.pop(context))
+                  context: context,
+                  text: "Edit",
+                  onPressed: () => showDialog(
+                          context: context,
+                          builder: (context) => EditDialog(node: widget.node))
+                      .then((value) => Navigator.pop(context)),
                 ),
                 DialogButton(
-                  context: context, 
-                  text: "Delete", 
-                  onPressed: () => showDialog(context: context, builder: (context) => 
-                    ConfirmationDialog(
+                  context: context,
+                  text: "Delete",
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => ConfirmationDialog(
                       title: 'Delete Node',
-                      content: 'Are you sure you want to delete this node AND ALL ${widget.node["num_descendants"]} DESCENDANTS?',
+                      content:
+                          'Are you sure you want to delete this node AND ALL ${widget.node["num_descendants"]} DESCENDANTS?',
                       requiredDelay: 3000,
                       onConfirm: () {
                         final dbHelper = DatabaseHelper();
-                        dbHelper.deleteNode(widget.node['node_id']).then((value) => Navigator.pop(context));
+                        dbHelper
+                            .deleteNode(widget.node['node_id'])
+                            .then((value) => Navigator.pop(context));
                       },
                     ),
                   ),

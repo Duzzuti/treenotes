@@ -58,28 +58,30 @@ class DatabaseHelper {
 
   Future<int> addRoot() async {
     final db = await database;
-  
+
     // Check if there are any existing entries in the Nodes table
-    final count = Sqflite.firstIntValue(await db!.rawQuery('SELECT COUNT(*) FROM Nodes'));
+    final count =
+        Sqflite.firstIntValue(await db!.rawQuery('SELECT COUNT(*) FROM Nodes'));
 
     if (count! > 0) {
       return -1; // The root node already exists
     }
 
     // If the Nodes table is empty, insert the root node
-    return await db.insert('Nodes', 
-      {
-        'node_id': 0,
-        'title': 'Main',
-        'content': '',
-        'num_children': 0,
-        'num_descendants': 0,
-        'parent_id': null,
-      }
-    );
+    return await db.insert('Nodes', {
+      'node_id': 0,
+      'title': 'Main',
+      'content': '',
+      'num_children': 0,
+      'num_descendants': 0,
+      'parent_id': null,
+    });
   }
 
-  Future<void> addNode({required int parentId, required String title, required String content}) async {
+  Future<void> addNode(
+      {required int parentId,
+      required String title,
+      required String content}) async {
     final db = await database;
     final batch = db!.batch();
 
@@ -93,7 +95,7 @@ class DatabaseHelper {
     final newNodeId = await db.insert('Nodes', {
       'title': title,
       'content': content,
-      'num_children': 0,    // New nodes have no children initially
+      'num_children': 0, // New nodes have no children initially
       'num_descendants': 0, // New nodes have no descendants initially
       'parent_id': parentId,
     });
@@ -120,7 +122,8 @@ class DatabaseHelper {
         await _subDescendants(batch, parentId, node['num_descendants'] + 1);
         await _decrementChildren(batch, parentId);
       } else {
-        throw Exception('Parent node with ID $parentId not found. Cannot delete node $nodeId. Please note that the root node cannot be deleted.');
+        throw Exception(
+            'Parent node with ID $parentId not found. Cannot delete node $nodeId. Please note that the root node cannot be deleted.');
       }
     } else {
       throw Exception('Node with ID $nodeId not found');
@@ -138,24 +141,29 @@ class DatabaseHelper {
       await _deleteRecursively(batch, childId);
     }
     batch.delete('Nodes', where: 'node_id = ?', whereArgs: [nodeId]);
-    batch.delete('NodeRelationships', where: 'child_id = ?', whereArgs: [nodeId]);
+    batch.delete('NodeRelationships',
+        where: 'child_id = ?', whereArgs: [nodeId]);
   }
 
   Future<void> updateNode(int nodeId, String title, String content) async {
     final db = await database;
-    await db!.update('Nodes', {'title': title, 'content': content}, where: 'node_id = ?', whereArgs: [nodeId]);
+    await db!.update('Nodes', {'title': title, 'content': content},
+        where: 'node_id = ?', whereArgs: [nodeId]);
   }
 
-  Future<void> _subDescendants(Batch batch, int? parentId, int numDescendants) async {
+  Future<void> _subDescendants(
+      Batch batch, int? parentId, int numDescendants) async {
     // Decrease num_descendants values of all parent nodes recursively
-    if(parentId == null) return;
+    if (parentId == null) return;
     final parent = await getNodeById(parentId);
     if (parent != null) {
       final int newNumDescendants = parent['num_descendants'] - numDescendants;
       if (newNumDescendants < 0) {
-        throw Exception('Negative num_descendants value for node with ID $parentId');
+        throw Exception(
+            'Negative num_descendants value for node with ID $parentId');
       }
-      batch.update('Nodes', {'num_descendants': newNumDescendants}, where: 'node_id = ?', whereArgs: [parentId]);
+      batch.update('Nodes', {'num_descendants': newNumDescendants},
+          where: 'node_id = ?', whereArgs: [parentId]);
       await _subDescendants(batch, parent['parent_id'], numDescendants);
     } else {
       throw Exception('Parent node with ID $parentId not found');
@@ -168,9 +176,11 @@ class DatabaseHelper {
     if (parent != null) {
       final int numChildren = parent['num_children'] - 1;
       if (numChildren < 0) {
-        throw Exception('Negative num_children value for node with ID $parentId');
+        throw Exception(
+            'Negative num_children value for node with ID $parentId');
       }
-      batch.update('Nodes', {'num_children': numChildren}, where: 'node_id = ?', whereArgs: [parentId]);
+      batch.update('Nodes', {'num_children': numChildren},
+          where: 'node_id = ?', whereArgs: [parentId]);
     } else {
       throw Exception('Parent node with ID $parentId not found');
     }
@@ -178,11 +188,12 @@ class DatabaseHelper {
 
   Future<void> _incrementDescendants(Batch batch, int? parentId) async {
     // Increment num_descendants values of all parent nodes recursively
-    if(parentId == null) return;
+    if (parentId == null) return;
     final parent = await getNodeById(parentId);
     if (parent != null) {
       final int numDescendants = parent['num_descendants'] + 1;
-      batch.update('Nodes', {'num_descendants': numDescendants}, where: 'node_id = ?', whereArgs: [parentId]);
+      batch.update('Nodes', {'num_descendants': numDescendants},
+          where: 'node_id = ?', whereArgs: [parentId]);
       await _incrementDescendants(batch, parent['parent_id']);
     } else {
       throw Exception('Parent node with ID $parentId not found');
@@ -194,7 +205,8 @@ class DatabaseHelper {
     final parent = await getNodeById(parentId);
     if (parent != null) {
       final int numChildren = parent['num_children'] + 1;
-      batch.update('Nodes', {'num_children': numChildren}, where: 'node_id = ?', whereArgs: [parentId]);
+      batch.update('Nodes', {'num_children': numChildren},
+          where: 'node_id = ?', whereArgs: [parentId]);
     } else {
       throw Exception('Parent node with ID $parentId not found');
     }
@@ -202,11 +214,13 @@ class DatabaseHelper {
 
   Future<Map<String, dynamic>?> getNodeById(int nodeId) async {
     final db = await database;
-    final results = await db!.query('Nodes', where: 'node_id = ?', whereArgs: [nodeId]);
+    final results =
+        await db!.query('Nodes', where: 'node_id = ?', whereArgs: [nodeId]);
     return results.isNotEmpty ? results.first : null;
   }
 
-  Future<List<Map<String, dynamic>>> getChildren({required int parentId}) async {
+  Future<List<Map<String, dynamic>>> getChildren(
+      {required int parentId}) async {
     final db = await database;
     final results = await db!.query(
       'NodeRelationships',

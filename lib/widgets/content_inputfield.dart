@@ -34,9 +34,11 @@ class ContentInputField extends StatelessWidget {
             scrollPhysics: const AlwaysScrollableScrollPhysics(),
             decoration: InputDecoration(
               hintText: 'Content',
-              hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
+              hintStyle:
+                  TextStyle(color: Theme.of(context).colorScheme.secondary),
               border: OutlineInputBorder(
-                borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+                borderSide:
+                    BorderSide(color: Theme.of(context).colorScheme.secondary),
               ),
             ),
           ),

@@ -17,10 +17,10 @@ class TitleInputField extends StatelessWidget {
         hintText: 'Title',
         hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
         border: OutlineInputBorder(
-          borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+          borderSide:
+              BorderSide(color: Theme.of(context).colorScheme.secondary),
         ),
       ),
     );
   }
 }
-

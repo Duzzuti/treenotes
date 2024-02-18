@@ -19,12 +19,18 @@ class _CreateDialogState extends State<CreateDialog> {
 
   @override
   void initState() {
-    titleController.addListener(() { setState(() {
-      submitActivated = titleController.text.isNotEmpty && contentController.text.isNotEmpty;
-    }); });
-    contentController.addListener(() { setState(() {
-      submitActivated = titleController.text.isNotEmpty && contentController.text.isNotEmpty;
-    }); });
+    titleController.addListener(() {
+      setState(() {
+        submitActivated = titleController.text.isNotEmpty &&
+            contentController.text.isNotEmpty;
+      });
+    });
+    contentController.addListener(() {
+      setState(() {
+        submitActivated = titleController.text.isNotEmpty &&
+            contentController.text.isNotEmpty;
+      });
+    });
     super.initState();
   }
 
@@ -39,18 +45,23 @@ class _CreateDialogState extends State<CreateDialog> {
   Widget build(BuildContext context) {
     return NodeInputDialog(
       title: 'New Note',
-      titleController: titleController, 
-      contentScrollController: contentScrollController, 
-      contentController: contentController, 
+      titleController: titleController,
+      contentScrollController: contentScrollController,
+      contentController: contentController,
       confirmDialog: DialogButton(
         context: context,
         text: "Create Note",
         onPressed: () {
           final dbHelper = DatabaseHelper();
-          dbHelper.addNode(parentId: widget.parentId, title: titleController.text, content: contentController.text).then((value) => Navigator.pop(context));
+          dbHelper
+              .addNode(
+                  parentId: widget.parentId,
+                  title: titleController.text,
+                  content: contentController.text)
+              .then((value) => Navigator.pop(context));
         },
         submitActivated: submitActivated,
-      )
+      ),
     );
   }
 }

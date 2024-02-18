@@ -22,12 +22,18 @@ class _EditDialogState extends State<EditDialog> {
   void initState() {
     titleController.text = widget.node['title'];
     contentController.text = widget.node['content'];
-    titleController.addListener(() { setState(() {
-      submitActivated = titleController.text.isNotEmpty && contentController.text.isNotEmpty;
-    }); });
-    contentController.addListener(() { setState(() {
-      submitActivated = titleController.text.isNotEmpty && contentController.text.isNotEmpty;
-    }); });
+    titleController.addListener(() {
+      setState(() {
+        submitActivated = titleController.text.isNotEmpty &&
+            contentController.text.isNotEmpty;
+      });
+    });
+    contentController.addListener(() {
+      setState(() {
+        submitActivated = titleController.text.isNotEmpty &&
+            contentController.text.isNotEmpty;
+      });
+    });
     super.initState();
   }
 
@@ -42,14 +48,15 @@ class _EditDialogState extends State<EditDialog> {
   Widget build(BuildContext context) {
     return NodeInputDialog(
       title: 'Edit Node',
-      titleController: titleController, 
-      contentScrollController: contentScrollController, 
+      titleController: titleController,
+      contentScrollController: contentScrollController,
       contentController: contentController,
       confirmDialog: DialogButton(
-        context: context, 
-        text: "Confirm", 
-        onPressed: () => showDialog(context: context, builder: (context) => 
-          ConfirmationDialog(
+        context: context,
+        text: "Confirm",
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) => ConfirmationDialog(
             title: 'Edit Node',
             content: 'Are you sure you want to save the changes?',
             requiredDelay: 1000,
@@ -57,7 +64,10 @@ class _EditDialogState extends State<EditDialog> {
               // Update the node in the database
               // (see the next snippet for the implementation of the DatabaseHelper class)
               final dbHelper = DatabaseHelper();
-              await dbHelper.updateNode(widget.node["node_id"], titleController.text, contentController.text).then((value) => Navigator.pop(context));
+              await dbHelper
+                  .updateNode(widget.node["node_id"], titleController.text,
+                      contentController.text)
+                  .then((value) => Navigator.pop(context));
             },
           ),
         ),
