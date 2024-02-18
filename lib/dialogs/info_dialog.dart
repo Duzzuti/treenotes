@@ -71,7 +71,9 @@ class _InfoDialogState extends State<InfoDialog> {
                             .then((value) => Navigator.pop(context));
                       },
                     ),
-                  ).then((value) {_isDeleting ? _isDeleting = false : Navigator.pop(context);}),
+                  ).then((value) {
+                    _isDeleting ? _isDeleting = false : Navigator.pop(context);
+                  }),
                 ),
               ],
             ),

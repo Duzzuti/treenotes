@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:treenotes/widgets/dialog_button.dart';
 
 class ConfirmationDialog extends StatefulWidget {
   final String title;
@@ -81,28 +82,10 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Theme.of(context).colorScheme.secondary),
-                    padding: MaterialStateProperty.all(
-                      const EdgeInsets.only(bottom: 12, left: 12, right: 12),
-                    ),
-                  ),
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.background,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
+                const CancelDialogButton(),
                 InkWell(
                   customBorder: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
+                    borderRadius: BorderRadius.all(Radius.circular(24)),
                   ),
                   onTapDown: (_) {
                     setState(() {
@@ -132,13 +115,15 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                       gradient: LinearGradient(
                         colors: [
                           Colors.red,
-                          Theme.of(context).colorScheme.secondary
+                          pressStarted != null
+                              ? Theme.of(context).colorScheme.tertiary
+                              : Theme.of(context).colorScheme.secondary,
                         ],
                         stops: [(progress - 0.05), progress],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(24),
                     ),
                     child: ElevatedButton(
                       onPressed: null,
@@ -146,8 +131,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                         backgroundColor:
                             MaterialStateProperty.all(Colors.transparent),
                         padding: MaterialStateProperty.all(
-                          const EdgeInsets.only(
-                              bottom: 12, left: 12, right: 12),
+                          const EdgeInsets.all(8),
                         ),
                         mouseCursor:
                             MaterialStateProperty.all(SystemMouseCursors.click),
