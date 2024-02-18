@@ -13,6 +13,8 @@ class InfoDialog extends StatefulWidget {
 }
 
 class _InfoDialogState extends State<InfoDialog> {
+  bool _isDeleting = false;
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -63,12 +65,13 @@ class _InfoDialogState extends State<InfoDialog> {
                       requiredDelay: 3000,
                       onConfirm: () {
                         final dbHelper = DatabaseHelper();
+                        _isDeleting = true;
                         dbHelper
                             .deleteNode(widget.node['node_id'])
                             .then((value) => Navigator.pop(context));
                       },
                     ),
-                  ),
+                  ).then((value) {_isDeleting ? _isDeleting = false : Navigator.pop(context);}),
                 ),
               ],
             ),
