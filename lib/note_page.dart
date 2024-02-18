@@ -3,6 +3,7 @@ import 'package:treenotes/dialogs/create_dialog.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/dialogs/info_dialog.dart';
 import 'package:treenotes/widgets/custom_appbar.dart';
+import 'package:treenotes/widgets/info_header.dart';
 import 'package:treenotes/widgets/loading_scaffold.dart';
 
 class NotePage extends StatefulWidget {
@@ -84,47 +85,7 @@ class _NotePageState extends State<NotePage> {
           ),
           body: Column(
             children: [
-              Row(
-                children: [
-                  const SizedBox(width: 12),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.13,
-                    child: Text(
-                      'Note',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: Center(
-                      child: Text(
-                        'direct/indirect children',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.08,
-                    child: Center(
-                      child: Text(
-                        'Go',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              const InfoHeader(),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.7,
                 child: ListView.builder(
