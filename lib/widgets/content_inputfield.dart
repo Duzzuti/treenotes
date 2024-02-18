@@ -31,7 +31,6 @@ class ContentInputField extends StatelessWidget {
             textCapitalization: TextCapitalization.sentences,
             maxLines: null,
             minLines: 3,
-            scrollPhysics: const AlwaysScrollableScrollPhysics(),
             decoration: InputDecoration(
               hintText: 'Content',
               hintStyle:
