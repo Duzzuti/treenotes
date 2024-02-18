@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/dialogs/confirmation_dialog.dart';
 import 'package:treenotes/dialogs/edit_dialog.dart';
 import 'package:treenotes/widgets/dialog_button.dart';
+import 'package:treenotes/widgets/scrollable_text.dart';
 
 class InfoDialog extends StatefulWidget {
   final Map<String, dynamic> node;
@@ -17,29 +19,39 @@ class _InfoDialogState extends State<InfoDialog> {
 
   @override
   Widget build(BuildContext context) {
+    var divider = Divider(
+      color: Theme.of(context).colorScheme.primary,
+      thickness: 1,
+    );
     return Dialog(
       insetPadding: const EdgeInsets.all(16),
       backgroundColor: Theme.of(context).colorScheme.background,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              widget.node["title"],
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
+            Expanded(
+              flex: 1,
+              child: ScrollableText(
+                text: widget.node["title"],
                 fontSize: 24,
               ),
             ),
+            Divider(
+              color: Theme.of(context).colorScheme.primary,
+              thickness: 2,
+            ),
             const SizedBox(height: 16),
-            Text(
-              widget.node["content"],
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
+            divider,
+            Expanded(
+              flex: 6,
+              child: ScrollableText(
+                text: widget.node["content"],
                 fontSize: 20,
               ),
             ),
+            divider,
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
