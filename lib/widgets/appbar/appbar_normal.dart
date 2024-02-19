@@ -12,35 +12,35 @@ class NormalAppBar extends CustomAppBar {
     required void Function() loadData,
     required void Function() enterSelectionMode,
   }) : super(
-        title: isLoading ? "Loading..." : node!["title"],
-        actions: ActionDataList(
-          actions: [
-            ActionData(
-              icon: Icons.check_box_outline_blank_outlined,
-              onPressed: enterSelectionMode,
-            ),
-            ActionData(
-              icon: Icons.add,
-              onPressed: () {
-                showDialog(
-                        context: context,
-                        builder: (context) => isLoading
-                            ? const Dialog()
-                            : CreateDialog(parentId: nodeId),
-                        barrierDismissible: false)
-                    .then((value) => loadData());
-              },
-            ),
-            ActionData(
-              icon: Icons.home,
-              onPressed: () {
-                Navigator.popUntil(
-                  context,
-                  ModalRoute.withName('/'),
-                );
-              },
-            ),
-          ],
-        ),
-      );
+          title: isLoading ? "Loading..." : node!["title"],
+          actions: ActionDataList(
+            actions: [
+              ActionData(
+                icon: Icons.check_box_outline_blank_outlined,
+                onPressed: enterSelectionMode,
+              ),
+              ActionData(
+                icon: Icons.add,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => isLoading
+                        ? const Dialog()
+                        : CreateDialog(parentId: nodeId),
+                    barrierDismissible: false,
+                  ).then((value) => loadData());
+                },
+              ),
+              ActionData(
+                icon: Icons.home,
+                onPressed: () {
+                  Navigator.popUntil(
+                    context,
+                    ModalRoute.withName('/'),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
 }

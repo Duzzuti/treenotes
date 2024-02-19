@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:treenotes/database/helper.dart';
-import 'package:treenotes/dialogs/info_dialog.dart';
 import 'package:treenotes/widgets/appbar/appbar_normal.dart';
 import 'package:treenotes/widgets/appbar/appbar_selection.dart';
 import 'package:treenotes/widgets/info_header.dart';
 import 'package:treenotes/widgets/loading_scaffold.dart';
+import 'package:treenotes/widgets/node.dart';
 
 class NotePage extends StatefulWidget {
   final int nodeId;
@@ -20,6 +20,7 @@ class _NotePageState extends State<NotePage> {
   bool selectionMode = false;
   Map<String, dynamic>? node;
   List<Map<String, dynamic>>? children;
+  List<int> selectedNodes = [];
 
   void loadData() {
     isLoading = true;
@@ -56,31 +57,33 @@ class _NotePageState extends State<NotePage> {
       builder: (context, constraints) {
         return LoadingScaffold(
           appBar: selectionMode
-          ? SelectionAppBar(
-            context: context,
-            isLoading: isLoading,
-            isSelected: false,
-            nodeId: widget.nodeId,
-            node: node,
-            loadData: loadData,
-            leaveSelectionMode: () {
-              setState(() {
-                selectionMode = false;
-              });
-            },
-          )
-          : NormalAppBar(
-            context: context,
-            isLoading: isLoading,
-            nodeId: widget.nodeId,
-            node: node,
-            loadData: loadData,
-            enterSelectionMode: () {
-              setState(() {
-                selectionMode = true;
-              });
-            },
-          ),
+              ? SelectionAppBar(
+                  context: context,
+                  isLoading: isLoading,
+                  isSelected: selectedNodes.isNotEmpty,
+                  nodeId: widget.nodeId,
+                  node: node,
+                  loadData: loadData,
+                  leaveSelectionMode: () {
+                    setState(() {
+                      selectionMode = false;
+                      selectedNodes.clear();
+                    });
+                  },
+                )
+              : NormalAppBar(
+                  context: context,
+                  isLoading: isLoading,
+                  nodeId: widget.nodeId,
+                  node: node,
+                  loadData: loadData,
+                  enterSelectionMode: () {
+                    setState(() {
+                      selectionMode = true;
+                      selectedNodes.clear();
+                    });
+                  },
+                ),
           body: Column(
             children: [
               const InfoHeader(),
@@ -90,104 +93,24 @@ class _NotePageState extends State<NotePage> {
                   scrollDirection: Axis.vertical,
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      margin: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.tertiary,
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
+                    return Node(
+                      selectionMode: selectionMode,
+                      index: index,
+                      children: children,
+                      loadData: loadData,
+                      selected: selectedNodes.contains(
+                        children![index]["node_id"],
                       ),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.55,
-                            child: TextButton(
-                              onPressed: () {
-                                showDialog(
-                                        context: context,
-                                        builder: (context) =>
-                                            InfoDialog(node: children![index]))
-                                    .then((value) => loadData());
-                              },
-                              child: Text(
-                                children![index]["title"],
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            child: Center(
-                              child: Text(
-                                children![index]["num_children"] > 999
-                                    ? '>999'
-                                    : children![index]["num_children"]
-                                        .toString(),
-                                maxLines: 1,
-                                softWrap: false,
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            child: Center(
-                              child: Text(
-                                children![index]["num_descendants"] > 999
-                                    ? '>999'
-                                    : children![index]["num_descendants"]
-                                        .toString(),
-                                maxLines: 1,
-                                softWrap: false,
-                                style: TextStyle(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Center(
-                            child: InkWell(
-                              hoverColor: Colors.red,
-                              focusColor: Colors.red,
-                              overlayColor:
-                                  MaterialStateProperty.all(Colors.red),
-                              highlightColor: Colors.red,
-                              splashColor: Colors.red,
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => NotePage(
-                                            nodeId: children![index]["node_id"],
-                                          )),
-                                ).then((value) => loadData());
-                              },
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.1,
-                                child: Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Theme.of(context).colorScheme.primary,
-                                  size: 24,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                      onSelectionChanged: () {
+                        setState(() {
+                          if (selectedNodes
+                              .contains(children![index]["node_id"])) {
+                            selectedNodes.remove(children![index]["node_id"]);
+                          } else {
+                            selectedNodes.add(children![index]["node_id"]);
+                          }
+                        });
+                      },
                     );
                   },
                   itemCount: children == null ? 0 : children!.length,
