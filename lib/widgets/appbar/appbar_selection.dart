@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/database/helper.dart';
+import 'package:treenotes/dialogs/confirmation_dialog.dart';
 import 'package:treenotes/widgets/appbar/custom_appbar.dart';
 
 class SelectionAppBar extends CustomAppBar {
@@ -6,7 +8,8 @@ class SelectionAppBar extends CustomAppBar {
     super.key,
     required BuildContext super.context,
     required bool isLoading,
-    required bool isSelected,
+    required List<int> selectedNodes,
+    required int selectedDescendants,
     required int nodeId,
     required Map<String, dynamic>? node,
     required void Function() loadData,
@@ -22,16 +25,29 @@ class SelectionAppBar extends CustomAppBar {
               ),
               ActionData(
                 icon: Icons.drive_file_move,
-                enabled: isSelected,
+                enabled: selectedNodes.isNotEmpty,
                 onPressed: () {
                   // TODO: Implement move
                 },
               ),
               ActionData(
                 icon: Icons.delete,
-                enabled: isSelected,
+                enabled: selectedNodes.isNotEmpty,
                 onPressed: () {
-                  // TODO: Implement delete
+                  showDialog(
+                    context: context,
+                    builder: (context) => ConfirmationDialog(
+                      title: 'Delete Nodes',
+                      content:
+                          'Are you sure you want to DELETE ALL ${selectedNodes.length} SELECTED NODES AND ALL $selectedDescendants DESCENDANTS?',
+                      requiredDelay: 3000,
+                      onConfirm: () async {
+                        final dbHelper = DatabaseHelper();
+                        await dbHelper.deleteNodes(selectedNodes);
+                        loadData();
+                      },
+                    ),
+                  );
                 },
               ),
             ],

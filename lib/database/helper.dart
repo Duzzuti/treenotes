@@ -110,6 +110,12 @@ class DatabaseHelper {
     await batch.commit();
   }
 
+  Future<void> deleteNodes(List<int> nodeIds) async {
+    for (final nodeId in nodeIds) {
+      await deleteNode(nodeId);
+    }
+  }
+
   Future<void> deleteNode(int nodeId) async {
     final db = await database;
     final batch = db!.batch();
