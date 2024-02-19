@@ -72,7 +72,7 @@ class _InfoDialogState extends State<InfoDialog> {
                     builder: (context) => ConfirmationDialog(
                       title: 'Delete Node',
                       content:
-                          'Are you sure you want to delete this node AND ALL ${widget.node["num_descendants"]} DESCENDANTS?',
+                          'Are you sure you want to DELETE THIS NODE AND ALL ${widget.node["num_descendants"]} DESCENDANTS?',
                       requiredDelay: 3000,
                       onConfirm: () {
                         final dbHelper = DatabaseHelper();

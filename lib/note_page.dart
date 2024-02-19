@@ -21,6 +21,7 @@ class _NotePageState extends State<NotePage> {
   Map<String, dynamic>? node;
   List<Map<String, dynamic>>? children;
   List<int> selectedNodes = [];
+  int selectedDescendants = 0;
 
   void loadData() {
     isLoading = true;
@@ -60,7 +61,8 @@ class _NotePageState extends State<NotePage> {
               ? SelectionAppBar(
                   context: context,
                   isLoading: isLoading,
-                  isSelected: selectedNodes.isNotEmpty,
+                  selectedNodes: selectedNodes,
+                  selectedDescendants: selectedDescendants,
                   nodeId: widget.nodeId,
                   node: node,
                   loadData: loadData,
@@ -68,6 +70,7 @@ class _NotePageState extends State<NotePage> {
                     setState(() {
                       selectionMode = false;
                       selectedNodes.clear();
+                      selectedDescendants = 0;
                     });
                   },
                 )
@@ -81,6 +84,7 @@ class _NotePageState extends State<NotePage> {
                     setState(() {
                       selectionMode = true;
                       selectedNodes.clear();
+                      selectedDescendants = 0;
                     });
                   },
                 ),
@@ -106,8 +110,12 @@ class _NotePageState extends State<NotePage> {
                           if (selectedNodes
                               .contains(children![index]["node_id"])) {
                             selectedNodes.remove(children![index]["node_id"]);
+                            selectedDescendants -=
+                                children![index]["num_descendants"] as int;
                           } else {
                             selectedNodes.add(children![index]["node_id"]);
+                            selectedDescendants +=
+                                children![index]["num_descendants"] as int;
                           }
                         });
                       },
