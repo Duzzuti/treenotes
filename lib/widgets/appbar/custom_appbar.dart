@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class ActionData {
   final IconData icon;
-  final Function onPressed;
-  const ActionData({required this.icon, required this.onPressed});
+  final void Function() onPressed;
+  final bool enabled;
+  const ActionData(
+      {required this.icon, required this.onPressed, this.enabled = true});
 }
 
 class ActionDataList {
@@ -22,12 +24,12 @@ class ActionDataList {
               : const EdgeInsets.all(8),
           icon: Icon(
             action.icon,
-            color: Theme.of(context).colorScheme.background,
+            color: action.enabled
+                ? Theme.of(context).colorScheme.background
+                : Theme.of(context).colorScheme.background.withOpacity(0.3),
             size: 48,
           ),
-          onPressed: () {
-            action.onPressed();
-          },
+          onPressed: action.enabled ? action.onPressed : null,
         ),
       );
     }
@@ -36,9 +38,11 @@ class ActionDataList {
 }
 
 class CustomAppBar extends AppBar {
+  final bool standardColor;
   CustomAppBar(
       {super.key,
       required context,
+      this.standardColor = true,
       required String title,
       required ActionDataList actions})
       : super(
@@ -50,7 +54,9 @@ class CustomAppBar extends AppBar {
           ),
           toolbarHeight: 64,
           actions: actions.getList(context),
-          backgroundColor: Theme.of(context).colorScheme.secondary,
+          backgroundColor: standardColor
+              ? Theme.of(context).colorScheme.secondary
+              : Theme.of(context).colorScheme.primary,
           elevation: 0,
           iconTheme: IconThemeData(
             color: Theme.of(context).colorScheme.background,
