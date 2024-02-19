@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:treenotes/dialogs/create_dialog.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/dialogs/info_dialog.dart';
-import 'package:treenotes/widgets/custom_appbar.dart';
+import 'package:treenotes/widgets/appbar/appbar_normal.dart';
+import 'package:treenotes/widgets/appbar/appbar_selection.dart';
 import 'package:treenotes/widgets/info_header.dart';
 import 'package:treenotes/widgets/loading_scaffold.dart';
 
@@ -17,6 +17,7 @@ class NotePage extends StatefulWidget {
 class _NotePageState extends State<NotePage> {
   final dbHelper = DatabaseHelper();
   bool isLoading = true;
+  bool selectionMode = false;
   Map<String, dynamic>? node;
   List<Map<String, dynamic>>? children;
 
@@ -54,34 +55,31 @@ class _NotePageState extends State<NotePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return LoadingScaffold(
-          appBar: CustomAppBar(
+          appBar: selectionMode
+          ? SelectionAppBar(
             context: context,
-            title: isLoading ? "Loading..." : node!["title"],
-            actions: ActionDataList(
-              actions: [
-                ActionData(
-                  icon: Icons.add,
-                  onPressed: () {
-                    showDialog(
-                            context: context,
-                            builder: (context) => isLoading
-                                ? const Dialog()
-                                : CreateDialog(parentId: widget.nodeId),
-                            barrierDismissible: false)
-                        .then((value) => loadData());
-                  },
-                ),
-                ActionData(
-                  icon: Icons.home,
-                  onPressed: () {
-                    Navigator.popUntil(
-                      context,
-                      ModalRoute.withName('/'),
-                    );
-                  },
-                ),
-              ],
-            ),
+            isLoading: isLoading,
+            isSelected: false,
+            nodeId: widget.nodeId,
+            node: node,
+            loadData: loadData,
+            leaveSelectionMode: () {
+              setState(() {
+                selectionMode = false;
+              });
+            },
+          )
+          : NormalAppBar(
+            context: context,
+            isLoading: isLoading,
+            nodeId: widget.nodeId,
+            node: node,
+            loadData: loadData,
+            enterSelectionMode: () {
+              setState(() {
+                selectionMode = true;
+              });
+            },
           ),
           body: Column(
             children: [

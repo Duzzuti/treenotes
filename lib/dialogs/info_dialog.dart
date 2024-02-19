@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/dialogs/confirmation_dialog.dart';
 import 'package:treenotes/dialogs/edit_dialog.dart';

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class ActionData {
   final IconData icon;
-  final Function onPressed;
-  const ActionData({required this.icon, required this.onPressed});
+  final void Function() onPressed;
+  final bool enabled;
+  const ActionData({required this.icon, required this.onPressed, this.enabled = true});
 }
 
 class ActionDataList {
@@ -22,12 +23,12 @@ class ActionDataList {
               : const EdgeInsets.all(8),
           icon: Icon(
             action.icon,
-            color: Theme.of(context).colorScheme.background,
+            color: action.enabled 
+              ? Theme.of(context).colorScheme.background
+              : Theme.of(context).colorScheme.background.withOpacity(0.3),
             size: 48,
           ),
-          onPressed: () {
-            action.onPressed();
-          },
+          onPressed: action.enabled ? action.onPressed : null,
         ),
       );
     }
