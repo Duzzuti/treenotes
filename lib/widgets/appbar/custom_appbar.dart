@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 
 class ActionData {
   final IconData icon;
@@ -14,20 +15,16 @@ class ActionDataList {
 
   List<Widget> getList(BuildContext context) {
     List<IconButton> list = [];
-    int i = 0;
     for (var action in actions) {
-      i++;
       list.add(
         IconButton(
-          padding: i > actions.length
-              ? const EdgeInsets.only(right: 16, left: 8, top: 8, bottom: 8)
-              : const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           icon: Icon(
             action.icon,
             color: action.enabled
                 ? Theme.of(context).colorScheme.background
-                : Theme.of(context).colorScheme.background.withOpacity(0.3),
-            size: 48,
+                : Theme.of(context).colorScheme.background.withOpacity(Constants.fadeOpacity),
+            size: Constants.iconSizeHuge,
           ),
           onPressed: action.enabled ? action.onPressed : null,
         ),
@@ -57,7 +54,8 @@ class CustomAppBar extends AppBar {
           backgroundColor: standardColor
               ? Theme.of(context).colorScheme.secondary
               : Theme.of(context).colorScheme.primary,
-          elevation: 0,
+          elevation: 8,
+          shadowColor: Theme.of(context).colorScheme.primary,
           iconTheme: IconThemeData(
             color: Theme.of(context).colorScheme.background,
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/dialogs/confirmation_dialog.dart';
 import 'package:treenotes/dialogs/edit_dialog.dart';
@@ -31,10 +32,10 @@ class _InfoDialogState extends State<InfoDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Expanded(
-              flex: 1,
+              flex: Constants.infoHeaderFlex,
               child: ScrollableText(
                 text: widget.node["title"],
-                fontSize: 24,
+                fontSize: Constants.fontSizeBig,
               ),
             ),
             Divider(
@@ -44,10 +45,10 @@ class _InfoDialogState extends State<InfoDialog> {
             const SizedBox(height: 16),
             divider,
             Expanded(
-              flex: 6,
+              flex: Constants.infoContentFlex,
               child: ScrollableText(
                 text: widget.node["content"],
-                fontSize: 20,
+                fontSize: Constants.fontSizeMedium,
               ),
             ),
             divider,
@@ -73,7 +74,7 @@ class _InfoDialogState extends State<InfoDialog> {
                       title: 'Delete Node',
                       content:
                           'Are you sure you want to DELETE THIS NODE AND ALL ${widget.node["num_descendants"]} DESCENDANTS?',
-                      requiredDelay: 3000,
+                      requiredDelay: Constants.confirmationSingleDeleteDelay,
                       onConfirm: () {
                         final dbHelper = DatabaseHelper();
                         _isDeleting = true;

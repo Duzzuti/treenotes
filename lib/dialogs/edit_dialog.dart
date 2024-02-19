@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/dialogs/confirmation_dialog.dart';
 import 'package:treenotes/widgets/dialog_button.dart';
@@ -59,7 +60,7 @@ class _EditDialogState extends State<EditDialog> {
           builder: (context) => ConfirmationDialog(
             title: 'Edit Node',
             content: 'Are you sure you want to save the changes?',
-            requiredDelay: 1000,
+            requiredDelay: Constants.confirmationEditDelay,
             onConfirm: () async {
               // Update the node in the database
               // (see the next snippet for the implementation of the DatabaseHelper class)

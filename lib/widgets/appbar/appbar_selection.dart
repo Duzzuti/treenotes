@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/dialogs/confirmation_dialog.dart';
 import 'package:treenotes/widgets/appbar/custom_appbar.dart';
@@ -40,7 +41,7 @@ class SelectionAppBar extends CustomAppBar {
                       title: 'Delete Nodes',
                       content:
                           'Are you sure you want to DELETE ALL ${selectedNodes.length} SELECTED NODES AND ALL $selectedDescendants DESCENDANTS?',
-                      requiredDelay: 3000,
+                      requiredDelay: Constants.confirmationMultipleDeleteDelay,
                       onConfirm: () async {
                         final dbHelper = DatabaseHelper();
                         await dbHelper.deleteNodes(selectedNodes);

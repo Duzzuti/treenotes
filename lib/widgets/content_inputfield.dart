@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 
 class ContentInputField extends StatelessWidget {
   const ContentInputField({
@@ -13,7 +14,7 @@ class ContentInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 250,
+      height: Constants.contentInputFieldHeight,
       child: Scrollbar(
         trackVisibility: true,
         thumbVisibility: true,
@@ -30,7 +31,7 @@ class ContentInputField extends StatelessWidget {
             keyboardType: TextInputType.multiline,
             textCapitalization: TextCapitalization.sentences,
             maxLines: null,
-            minLines: 3,
+            minLines: Constants.contentMinLines,
             decoration: InputDecoration(
               hintText: 'Content',
               hintStyle:

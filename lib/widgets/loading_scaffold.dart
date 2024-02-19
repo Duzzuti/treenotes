@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 
 class LoadingScaffold extends StatelessWidget {
   final AppBar? appBar;
@@ -19,7 +20,7 @@ class LoadingScaffold extends StatelessWidget {
         if (isLoading)
           Scaffold(
             // Darken the background
-            backgroundColor: Colors.black.withOpacity(0.7),
+            backgroundColor: Colors.black.withOpacity(Constants.loadingOpacity),
             body: const Column(
               children: [
                 Spacer(flex: 4),
