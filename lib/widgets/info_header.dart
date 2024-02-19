@@ -12,7 +12,8 @@ class InfoHeader extends StatelessWidget {
       children: [
         const SizedBox(width: 12),
         SizedBox(
-          width: MediaQuery.of(context).size.width * Constants.headerNoteWidthFraction,
+          width: MediaQuery.of(context).size.width *
+              Constants.headerNoteWidthFraction,
           child: Text(
             'Note',
             style: TextStyle(
@@ -23,7 +24,8 @@ class InfoHeader extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         SizedBox(
-          width: MediaQuery.of(context).size.width * Constants.headerChildrenWidthFraction,
+          width: MediaQuery.of(context).size.width *
+              Constants.headerChildrenWidthFraction,
           child: Center(
             child: Text(
               'direct/indirect children',
@@ -36,7 +38,8 @@ class InfoHeader extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         SizedBox(
-          width: MediaQuery.of(context).size.width * Constants.headerGoWidthFraction,
+          width: MediaQuery.of(context).size.width *
+              Constants.headerGoWidthFraction,
           child: Center(
             child: Text(
               'Go',

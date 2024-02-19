@@ -93,7 +93,8 @@ class _NotePageState extends State<NotePage> {
             children: [
               const InfoHeader(),
               SizedBox(
-                height: MediaQuery.of(context).size.height * Constants.nodesListHeightFraction,
+                height: MediaQuery.of(context).size.height *
+                    Constants.nodesListHeightFraction,
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   physics: const AlwaysScrollableScrollPhysics(),

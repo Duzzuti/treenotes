@@ -23,7 +23,10 @@ class ActionDataList {
             action.icon,
             color: action.enabled
                 ? Theme.of(context).colorScheme.background
-                : Theme.of(context).colorScheme.background.withOpacity(Constants.fadeOpacity),
+                : Theme.of(context)
+                    .colorScheme
+                    .background
+                    .withOpacity(Constants.fadeOpacity),
             size: Constants.iconSizeHuge,
           ),
           onPressed: action.enabled ? action.onPressed : null,

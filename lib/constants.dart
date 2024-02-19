@@ -33,11 +33,10 @@ class Constants {
   // icon
   static const double iconSizeHuge = 48;
   static const double iconSizeMedium = 24;
-  
+
   // appearance
   static const int contentMinLines = 3;
   static const double progressFade = 0.05;
-
 
   // ***************** Times ********************
   static const Duration confirmationUpdateInterval = Duration(milliseconds: 10);

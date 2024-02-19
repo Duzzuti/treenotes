@@ -26,7 +26,10 @@ class Node extends StatelessWidget {
       return Theme.of(context).colorScheme.onPrimary;
     } else {
       if (selectionMode) {
-        return Theme.of(context).colorScheme.primary.withOpacity(Constants.fadeOpacity);
+        return Theme.of(context)
+            .colorScheme
+            .primary
+            .withOpacity(Constants.fadeOpacity);
       } else {
         return Theme.of(context).colorScheme.primary;
       }
@@ -54,7 +57,8 @@ class Node extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width * Constants.nodeTitleWidthFraction,
+              width: MediaQuery.of(context).size.width *
+                  Constants.nodeTitleWidthFraction,
               child: TextButton(
                 onPressed: selectionMode
                     ? null
@@ -77,7 +81,8 @@ class Node extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             SizedBox(
-              width: MediaQuery.of(context).size.width * Constants.nodeChildrenWidthFraction,
+              width: MediaQuery.of(context).size.width *
+                  Constants.nodeChildrenWidthFraction,
               child: Center(
                 child: Text(
                   children![index]["num_children"] > 999
@@ -94,7 +99,8 @@ class Node extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             SizedBox(
-              width: MediaQuery.of(context).size.width * Constants.nodeChildrenWidthFraction,
+              width: MediaQuery.of(context).size.width *
+                  Constants.nodeChildrenWidthFraction,
               child: Center(
                 child: Text(
                   children![index]["num_descendants"] > 999
