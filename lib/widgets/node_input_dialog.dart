@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 import 'package:treenotes/widgets/content_inputfield.dart';
 import 'package:treenotes/widgets/dialog_button.dart';
 import 'package:treenotes/widgets/title_inputfield.dart';
@@ -34,7 +35,7 @@ class NodeInputDialog extends StatelessWidget {
                 title,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.secondary,
-                  fontSize: 24,
+                  fontSize: Constants.fontSizeBig,
                 ),
               ),
               const SizedBox(height: 16),

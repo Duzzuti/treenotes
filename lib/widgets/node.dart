@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 import 'package:treenotes/dialogs/info_dialog.dart';
 import 'package:treenotes/note_page.dart';
 
@@ -25,7 +26,10 @@ class Node extends StatelessWidget {
       return Theme.of(context).colorScheme.onPrimary;
     } else {
       if (selectionMode) {
-        return Theme.of(context).colorScheme.primary.withOpacity(0.3);
+        return Theme.of(context)
+            .colorScheme
+            .primary
+            .withOpacity(Constants.fadeOpacity);
       } else {
         return Theme.of(context).colorScheme.primary;
       }
@@ -53,7 +57,8 @@ class Node extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.55,
+              width: MediaQuery.of(context).size.width *
+                  Constants.nodeTitleWidthFraction,
               child: TextButton(
                 onPressed: selectionMode
                     ? null
@@ -69,14 +74,15 @@ class Node extends StatelessWidget {
                   children![index]["title"],
                   style: TextStyle(
                     color: _getColor(context),
-                    fontSize: 20,
+                    fontSize: Constants.fontSizeMedium,
                   ),
                 ),
               ),
             ),
             const SizedBox(width: 8),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.1,
+              width: MediaQuery.of(context).size.width *
+                  Constants.nodeChildrenWidthFraction,
               child: Center(
                 child: Text(
                   children![index]["num_children"] > 999
@@ -86,14 +92,15 @@ class Node extends StatelessWidget {
                   softWrap: false,
                   style: TextStyle(
                     color: _getColor(context),
-                    fontSize: 16,
+                    fontSize: Constants.fontSizeSmall,
                   ),
                 ),
               ),
             ),
             const SizedBox(width: 8),
             SizedBox(
-              width: MediaQuery.of(context).size.width * 0.1,
+              width: MediaQuery.of(context).size.width *
+                  Constants.nodeChildrenWidthFraction,
               child: Center(
                 child: Text(
                   children![index]["num_descendants"] > 999
@@ -103,7 +110,7 @@ class Node extends StatelessWidget {
                   softWrap: false,
                   style: TextStyle(
                     color: _getColor(context),
-                    fontSize: 16,
+                    fontSize: Constants.fontSizeSmall,
                   ),
                 ),
               ),
@@ -125,7 +132,7 @@ class Node extends StatelessWidget {
               icon: Icon(
                 Icons.arrow_forward_ios,
                 color: _getColor(context),
-                size: 24,
+                size: Constants.iconSizeMedium,
               ),
             ),
           ],

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 import 'package:treenotes/widgets/dialog_button.dart';
 
 class ConfirmationDialog extends StatefulWidget {
@@ -28,7 +29,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+    timer = Timer.periodic(Constants.confirmationUpdateInterval, (timer) {
       setState(() {
         if (pressStarted != null) {
           progress = DateTime.now().difference(pressStarted!).inMilliseconds /
@@ -65,7 +66,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
               widget.title,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
-                fontSize: 32,
+                fontSize: Constants.fontSizeHuge,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -74,7 +75,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
               widget.content,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
-                fontSize: 20,
+                fontSize: Constants.fontSizeMedium,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -119,7 +120,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                               ? Theme.of(context).colorScheme.tertiary
                               : Theme.of(context).colorScheme.secondary,
                         ],
-                        stops: [(progress - 0.05), progress],
+                        stops: [(progress - Constants.progressFade), progress],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
@@ -140,7 +141,7 @@ class _ConfirmationDialogState extends State<ConfirmationDialog> {
                         'Confirm',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.background,
-                          fontSize: 20,
+                          fontSize: Constants.fontSizeMedium,
                         ),
                       ),
                     ),

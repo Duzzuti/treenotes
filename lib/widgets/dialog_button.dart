@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 
 class DialogButton extends ElevatedButton {
   final bool submitActivated;
@@ -22,7 +23,7 @@ class DialogButton extends ElevatedButton {
             text,
             style: TextStyle(
               color: Theme.of(context).colorScheme.background,
-              fontSize: 20,
+              fontSize: Constants.fontSizeMedium,
             ),
           ),
         );

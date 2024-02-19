@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:treenotes/constants.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._internal();
@@ -24,7 +25,7 @@ class DatabaseHelper {
     // Get the directory for the app's documents directory
     debugPrint('Initializing database');
     final documentsDirectory = await getApplicationDocumentsDirectory();
-    final path = join(documentsDirectory.path, 'treenotes.db');
+    final path = join(documentsDirectory.path, Constants.dataBaseFileName);
 
     // Open/create the database at a given path
     return openDatabase(path, version: 1, onCreate: _onCreate);

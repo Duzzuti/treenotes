@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/widgets/appbar/appbar_normal.dart';
 import 'package:treenotes/widgets/appbar/appbar_selection.dart';
@@ -92,7 +93,8 @@ class _NotePageState extends State<NotePage> {
             children: [
               const InfoHeader(),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.7,
+                height: MediaQuery.of(context).size.height *
+                    Constants.nodesListHeightFraction,
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   physics: const AlwaysScrollableScrollPhysics(),

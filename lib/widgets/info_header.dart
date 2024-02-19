@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treenotes/constants.dart';
 
 class InfoHeader extends StatelessWidget {
   const InfoHeader({
@@ -11,37 +12,40 @@ class InfoHeader extends StatelessWidget {
       children: [
         const SizedBox(width: 12),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.135,
+          width: MediaQuery.of(context).size.width *
+              Constants.headerNoteWidthFraction,
           child: Text(
             'Note',
             style: TextStyle(
               color: Theme.of(context).colorScheme.secondary,
-              fontSize: 20,
+              fontSize: Constants.fontSizeMedium,
             ),
           ),
         ),
         const SizedBox(width: 8),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.64,
+          width: MediaQuery.of(context).size.width *
+              Constants.headerChildrenWidthFraction,
           child: Center(
             child: Text(
               'direct/indirect children',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
-                fontSize: 20,
+                fontSize: Constants.fontSizeMedium,
               ),
             ),
           ),
         ),
         const SizedBox(width: 8),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.08,
+          width: MediaQuery.of(context).size.width *
+              Constants.headerGoWidthFraction,
           child: Center(
             child: Text(
               'Go',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.secondary,
-                fontSize: 20,
+                fontSize: Constants.fontSizeMedium,
               ),
             ),
           ),
