@@ -4,20 +4,20 @@ import 'package:treenotes/dialogs/info_dialog.dart';
 import 'package:treenotes/note_page.dart';
 
 class Node extends StatelessWidget {
-  final bool selectionMode;
+  final NotePageMode notePageMode;
   final bool selected;
   final int index;
   final List<Map<String, dynamic>>? children;
   final void Function() loadData;
-  final void Function() onSelectionChanged;
+  final void Function()? onSelectionChanged;
 
   const Node({
     super.key,
-    required this.selectionMode,
+    required this.notePageMode,
     required this.index,
     required this.children,
     required this.loadData,
-    required this.onSelectionChanged,
+    this.onSelectionChanged,
     this.selected = false,
   });
 
@@ -25,7 +25,7 @@ class Node extends StatelessWidget {
     if (selected) {
       return Theme.of(context).colorScheme.onPrimary;
     } else {
-      if (selectionMode) {
+      if (notePageMode == NotePageMode.selection) {
         return Theme.of(context)
             .colorScheme
             .primary
@@ -40,7 +40,7 @@ class Node extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       splashColor: Theme.of(context).colorScheme.primary,
-      onTap: !selectionMode ? null : onSelectionChanged,
+      onTap: onSelectionChanged,
       child: Container(
         padding: const EdgeInsets.all(8),
         margin: const EdgeInsets.all(4),
@@ -60,7 +60,7 @@ class Node extends StatelessWidget {
               width: MediaQuery.of(context).size.width *
                   Constants.nodeTitleWidthFraction,
               child: TextButton(
-                onPressed: selectionMode
+                onPressed: notePageMode != NotePageMode.normal
                     ? null
                     : () {
                         showDialog(
@@ -117,7 +117,7 @@ class Node extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             IconButton(
-              onPressed: selectionMode
+              onPressed: notePageMode != NotePageMode.normal
                   ? null
                   : () {
                       Navigator.push(

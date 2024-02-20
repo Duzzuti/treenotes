@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:treenotes/constants.dart';
 import 'package:treenotes/database/helper.dart';
+import 'package:treenotes/widgets/appbar/appbar_navigation.dart';
 import 'package:treenotes/widgets/appbar/appbar_normal.dart';
 import 'package:treenotes/widgets/appbar/appbar_selection.dart';
 import 'package:treenotes/widgets/info_header.dart';
 import 'package:treenotes/widgets/loading_scaffold.dart';
 import 'package:treenotes/widgets/node.dart';
+
+enum NotePageMode{
+  normal,
+  selection,
+  move,
+}
 
 class NotePage extends StatefulWidget {
   final int nodeId;
@@ -18,7 +25,7 @@ class NotePage extends StatefulWidget {
 class _NotePageState extends State<NotePage> {
   final dbHelper = DatabaseHelper();
   bool isLoading = true;
-  bool selectionMode = false;
+  NotePageMode mode = NotePageMode.normal;
   Map<String, dynamic>? node;
   List<Map<String, dynamic>>? children;
   List<int> selectedNodes = [];
@@ -46,6 +53,25 @@ class _NotePageState extends State<NotePage> {
     });
   }
 
+  void selectionChangedSelect(int index){
+    setState(() {
+      if (selectedNodes
+          .contains(children![index]["node_id"])) {
+        selectedNodes.remove(children![index]["node_id"]);
+        selectedDescendants -=
+            children![index]["num_descendants"] as int;
+      } else {
+        selectedNodes.add(children![index]["node_id"]);
+        selectedDescendants +=
+            children![index]["num_descendants"] as int;
+      }
+    });
+  }
+
+  void selectionChangedMove(int index){
+    // TODO: Implement move
+  }
+
   @override
   void initState() {
     // load the node from the database
@@ -58,37 +84,53 @@ class _NotePageState extends State<NotePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return LoadingScaffold(
-          appBar: selectionMode
-              ? SelectionAppBar(
-                  context: context,
-                  isLoading: isLoading,
-                  selectedNodes: selectedNodes,
-                  selectedDescendants: selectedDescendants,
-                  nodeId: widget.nodeId,
-                  node: node,
-                  loadData: loadData,
-                  leaveSelectionMode: () {
-                    setState(() {
-                      selectionMode = false;
-                      selectedNodes.clear();
-                      selectedDescendants = 0;
-                    });
-                  },
-                )
-              : NormalAppBar(
-                  context: context,
-                  isLoading: isLoading,
-                  nodeId: widget.nodeId,
-                  node: node,
-                  loadData: loadData,
-                  enterSelectionMode: () {
-                    setState(() {
-                      selectionMode = true;
-                      selectedNodes.clear();
-                      selectedDescendants = 0;
-                    });
-                  },
-                ),
+          appBar: switch (mode) {
+            NotePageMode.normal =>
+              NormalAppBar(
+                context: context,
+                isLoading: isLoading,
+                nodeId: widget.nodeId,
+                node: node,
+                loadData: loadData,
+                enterSelectionMode: () {
+                  setState(() {
+                    mode = NotePageMode.selection;
+                    selectedNodes.clear();
+                    selectedDescendants = 0;
+                  });
+                },
+              ),
+            NotePageMode.selection =>
+              SelectionAppBar(
+                context: context,
+                isLoading: isLoading,
+                selectedNodes: selectedNodes,
+                selectedDescendants: selectedDescendants,
+                nodeId: widget.nodeId,
+                node: node,
+                loadData: loadData,
+                leaveSelectionMode: () {
+                  setState(() {
+                    mode = NotePageMode.normal;
+                    selectedNodes.clear();
+                    selectedDescendants = 0;
+                  });
+                },
+              ),
+            NotePageMode.move =>
+              NavigationAppBar(
+                context: context,
+                isLoading: isLoading,
+                node: node,
+                leaveNavigationMode: () {
+                  setState(() {
+                    mode = NotePageMode.normal;
+                    selectedNodes.clear();
+                    selectedDescendants = 0;
+                  });
+                },
+              ),
+          },
           body: Column(
             children: [
               const InfoHeader(),
@@ -99,29 +141,27 @@ class _NotePageState extends State<NotePage> {
                   scrollDirection: Axis.vertical,
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return Node(
-                      selectionMode: selectionMode,
+                    var node = Node(
+                      notePageMode: mode,
                       index: index,
                       children: children,
                       loadData: loadData,
                       selected: selectedNodes.contains(
                         children![index]["node_id"],
                       ),
-                      onSelectionChanged: () {
-                        setState(() {
-                          if (selectedNodes
-                              .contains(children![index]["node_id"])) {
-                            selectedNodes.remove(children![index]["node_id"]);
-                            selectedDescendants -=
-                                children![index]["num_descendants"] as int;
-                          } else {
-                            selectedNodes.add(children![index]["node_id"]);
-                            selectedDescendants +=
-                                children![index]["num_descendants"] as int;
-                          }
-                        });
+                      onSelectionChanged: switch (mode) {
+                        NotePageMode.normal => null,
+                        NotePageMode.selection =>
+                            () {
+                              selectionChangedSelect(index);
+                            },
+                        NotePageMode.move =>
+                            () {
+                              selectionChangedMove(index);
+                            },
                       },
                     );
+                    return node;
                   },
                   itemCount: children == null ? 0 : children!.length,
                 ),
