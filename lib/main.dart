@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart' as sqflite_ffi;
 import 'package:treenotes/constants.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/note_page.dart';
+import 'package:treenotes/notepage_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,21 +42,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: Constants.appName,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xff12372A),
-        ).copyWith(
-          background: const Color(0xfffbfada),
-          primary: const Color(0xff12372a),
-          secondary: const Color(0xff436850),
-          tertiary: const Color(0xffadbc9f),
+    return ChangeNotifierProvider<NotePageProvider>(
+      create: (context) => NotePageProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: Constants.appName,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xff12372A),
+          ).copyWith(
+            background: const Color(0xfffbfada),
+            primary: const Color(0xff12372a),
+            secondary: const Color(0xff436850),
+            tertiary: const Color(0xffadbc9f),
+          ),
+          useMaterial3: true,
         ),
-        useMaterial3: true,
+        home: const NotePage(nodeId: 0), // The root node has an id of 0
       ),
-      home: const NotePage(nodeId: 0), // The root node has an id of 0
     );
   }
 }

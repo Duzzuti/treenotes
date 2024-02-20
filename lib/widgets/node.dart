@@ -1,31 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:treenotes/constants.dart';
 import 'package:treenotes/dialogs/info_dialog.dart';
 import 'package:treenotes/note_page.dart';
+import 'package:treenotes/notepage_provider.dart';
 
 class Node extends StatelessWidget {
-  final NotePageMode notePageMode;
-  final bool selected;
   final int index;
   final List<Map<String, dynamic>>? children;
   final void Function() loadData;
-  final void Function()? onSelectionChanged;
 
   const Node({
     super.key,
-    required this.notePageMode,
     required this.index,
     required this.children,
     required this.loadData,
-    this.onSelectionChanged,
-    this.selected = false,
   });
 
-  Color _getColor(BuildContext context) {
+  Color _getColor(BuildContext context, bool selected) {
     if (selected) {
       return Theme.of(context).colorScheme.onPrimary;
     } else {
-      if (notePageMode == NotePageMode.selection) {
+      if (Provider.of<NotePageProvider>(context).mode ==
+          NotePageMode.selection) {
         return Theme.of(context)
             .colorScheme
             .primary
@@ -38,9 +35,15 @@ class Node extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool selected = Provider.of<NotePageProvider>(context)
+        .selectedNodes
+        .contains(children![index]["node_id"]);
     return InkWell(
       splashColor: Theme.of(context).colorScheme.primary,
-      onTap: onSelectionChanged,
+      onTap: Provider.of<NotePageProvider>(context).selectedNodeChanges(
+        children![index]["node_id"],
+        children![index]["num_descendants"] as int,
+      ),
       child: Container(
         padding: const EdgeInsets.all(8),
         margin: const EdgeInsets.all(4),
@@ -60,7 +63,8 @@ class Node extends StatelessWidget {
               width: MediaQuery.of(context).size.width *
                   Constants.nodeTitleWidthFraction,
               child: TextButton(
-                onPressed: notePageMode != NotePageMode.normal
+                onPressed: Provider.of<NotePageProvider>(context).mode !=
+                        NotePageMode.normal
                     ? null
                     : () {
                         showDialog(
@@ -73,7 +77,7 @@ class Node extends StatelessWidget {
                 child: Text(
                   children![index]["title"],
                   style: TextStyle(
-                    color: _getColor(context),
+                    color: _getColor(context, selected),
                     fontSize: Constants.fontSizeMedium,
                   ),
                 ),
@@ -91,7 +95,7 @@ class Node extends StatelessWidget {
                   maxLines: 1,
                   softWrap: false,
                   style: TextStyle(
-                    color: _getColor(context),
+                    color: _getColor(context, selected),
                     fontSize: Constants.fontSizeSmall,
                   ),
                 ),
@@ -109,7 +113,7 @@ class Node extends StatelessWidget {
                   maxLines: 1,
                   softWrap: false,
                   style: TextStyle(
-                    color: _getColor(context),
+                    color: _getColor(context, selected),
                     fontSize: Constants.fontSizeSmall,
                   ),
                 ),
@@ -117,7 +121,8 @@ class Node extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             IconButton(
-              onPressed: notePageMode != NotePageMode.normal
+              onPressed: Provider.of<NotePageProvider>(context).mode !=
+                      NotePageMode.normal
                   ? null
                   : () {
                       Navigator.push(
@@ -127,11 +132,20 @@ class Node extends StatelessWidget {
                             nodeId: children![index]["node_id"],
                           ),
                         ),
-                      ).then((value) => loadData());
+                      ).then((value) {
+                        if (Provider.of<NotePageProvider>(context,
+                                    listen: false)
+                                .mode ==
+                            NotePageMode.selection) {
+                          Provider.of<NotePageProvider>(context, listen: false)
+                              .set(NotePageMode.normal);
+                        }
+                        loadData();
+                      });
                     },
               icon: Icon(
                 Icons.arrow_forward_ios,
-                color: _getColor(context),
+                color: _getColor(context, selected),
                 size: Constants.iconSizeMedium,
               ),
             ),

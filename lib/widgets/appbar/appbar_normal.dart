@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:treenotes/dialogs/create_dialog.dart';
+import 'package:treenotes/note_page.dart';
+import 'package:treenotes/notepage_provider.dart';
 import 'package:treenotes/widgets/appbar/custom_appbar.dart';
 
 class NormalAppBar extends CustomAppBar {
@@ -10,14 +13,15 @@ class NormalAppBar extends CustomAppBar {
     required int nodeId,
     required Map<String, dynamic>? node,
     required void Function() loadData,
-    required void Function() enterSelectionMode,
   }) : super(
           title: isLoading ? "Loading..." : node!["title"],
           actions: ActionDataList(
             actions: [
               ActionData(
                 icon: Icons.check_box_outline_blank_outlined,
-                onPressed: enterSelectionMode,
+                onPressed: () =>
+                    Provider.of<NotePageProvider>(context, listen: false)
+                        .set(NotePageMode.selection),
               ),
               ActionData(
                 icon: Icons.add,

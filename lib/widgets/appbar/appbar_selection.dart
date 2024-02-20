@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:treenotes/constants.dart';
 import 'package:treenotes/database/helper.dart';
 import 'package:treenotes/dialogs/confirmation_dialog.dart';
+import 'package:treenotes/note_page.dart';
+import 'package:treenotes/notepage_provider.dart';
 import 'package:treenotes/widgets/appbar/custom_appbar.dart';
 
 class SelectionAppBar extends CustomAppBar {
@@ -9,12 +12,9 @@ class SelectionAppBar extends CustomAppBar {
     super.key,
     required BuildContext super.context,
     required bool isLoading,
-    required List<int> selectedNodes,
-    required int selectedDescendants,
     required int nodeId,
     required Map<String, dynamic>? node,
     required void Function() loadData,
-    required void Function() leaveSelectionMode,
   }) : super(
           color: Theme.of(context).colorScheme.primary,
           title: isLoading ? "Loading..." : node!["title"],
@@ -22,29 +22,37 @@ class SelectionAppBar extends CustomAppBar {
             actions: [
               ActionData(
                 icon: Icons.check_box_outlined,
-                onPressed: leaveSelectionMode,
+                onPressed: () =>
+                    Provider.of<NotePageProvider>(context, listen: false)
+                        .set(NotePageMode.normal),
               ),
               ActionData(
                 icon: Icons.drive_file_move,
-                enabled: selectedNodes.isNotEmpty,
-                onPressed: () {
-                  // TODO: Implement move
-                },
+                enabled: Provider.of<NotePageProvider>(context)
+                    .selectedNodes
+                    .isNotEmpty,
+                onPressed: () =>
+                    Provider<NotePageMode>.value(value: NotePageMode.move),
               ),
               ActionData(
                 icon: Icons.delete,
-                enabled: selectedNodes.isNotEmpty,
+                enabled: Provider.of<NotePageProvider>(context)
+                    .selectedNodes
+                    .isNotEmpty,
                 onPressed: () {
                   showDialog(
                     context: context,
                     builder: (context) => ConfirmationDialog(
                       title: 'Delete Nodes',
                       content:
-                          'Are you sure you want to DELETE ALL ${selectedNodes.length} SELECTED NODES AND ALL $selectedDescendants DESCENDANTS?',
+                          'Are you sure you want to DELETE ALL ${Provider.of<NotePageProvider>(context).selectedNodes.length} SELECTED NODES AND ALL ${Provider.of<NotePageProvider>(context).selectedDescendants} DESCENDANTS?',
                       requiredDelay: Constants.confirmationMultipleDeleteDelay,
                       onConfirm: () async {
                         final dbHelper = DatabaseHelper();
-                        await dbHelper.deleteNodes(selectedNodes);
+                        await dbHelper.deleteNodes(
+                            Provider.of<NotePageProvider>(context,
+                                    listen: false)
+                                .selectedNodes);
                         loadData();
                       },
                     ),
