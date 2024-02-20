@@ -38,11 +38,11 @@ class ActionDataList {
 }
 
 class CustomAppBar extends AppBar {
-  final bool standardColor;
+  final Color? color;
   CustomAppBar(
       {super.key,
       required context,
-      this.standardColor = true,
+      this.color,
       required String title,
       required ActionDataList actions})
       : super(
@@ -54,9 +54,7 @@ class CustomAppBar extends AppBar {
           ),
           toolbarHeight: 64,
           actions: actions.getList(context),
-          backgroundColor: standardColor
-              ? Theme.of(context).colorScheme.secondary
-              : Theme.of(context).colorScheme.primary,
+          backgroundColor: color ?? Theme.of(context).colorScheme.secondary,
           elevation: 8,
           shadowColor: Theme.of(context).colorScheme.primary,
           iconTheme: IconThemeData(

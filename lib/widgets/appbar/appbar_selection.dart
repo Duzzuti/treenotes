@@ -16,7 +16,7 @@ class SelectionAppBar extends CustomAppBar {
     required void Function() loadData,
     required void Function() leaveSelectionMode,
   }) : super(
-          standardColor: false,
+          color: Theme.of(context).colorScheme.primary,
           title: isLoading ? "Loading..." : node!["title"],
           actions: ActionDataList(
             actions: [
